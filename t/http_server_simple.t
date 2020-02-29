@@ -2,7 +2,6 @@ use strict;
 use warnings;
 use Test::More;
 use Win32::TestServerManager;
-use File::Slurp;
 
 BEGIN {
   eval { require HTTP::Server::Simple::CGI };
@@ -43,7 +42,7 @@ isnt $response->code, 200, 'there is no server now again';
 
 # spawn on-the-fly perl script
 
-my $script_source = File::Slurp::read_file( $server_script );
+my $script_source = do { open my $fh, '<', $server_script; local $/; <$fh>; };
 
 eval {
   $manager->spawn(
